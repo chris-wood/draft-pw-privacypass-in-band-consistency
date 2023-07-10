@@ -87,14 +87,14 @@ a simple key consistency enforcement check to ensure that all Clients behind the
 Attester share a consistent view of the Issuer key.
 
 Upon receipt of a token request, which contains a key ID as described in
-{{PRIVACYPASS-ISSUANCE}}, Attesters do the following:
+{{PRIVACYPASS-ISSUANCE}}, an Attester does the following:
 
-1. Check that the Attester has a cached copy of the private token directory
+1. The Attester checks that it has a cached copy of the private token directory
    from the Issuer corresponding to the token request. If the Attester does not,
    it first obtains a copy of the directory. If this fails, the Attester aborts
    the token request with a failure.
-1. Check that the key ID corresponding to the token request corresponds to the
-   a valid key in the directory. If this fails, the Attester aborts the token
+1. The Attester compares the key ID corresponding in the token request to the
+   the valid keys in the directory. If no match is found, the Attester aborts token
    request with a failure.
 1. If the above steps succeed, the Attester allows the token request to proceed.
 
@@ -102,14 +102,15 @@ Attesters can update their cached copy of Issuer token directories independently
 of token requests. Attesters SHOULD refresh their cached copy of the Issuer directory
 when it becomes invalid (according to cache control headers).
 
-Attesters SHOULD insist that Issuer directories contain few keys suitable for use
-at any given point in time. This is because Clients and Origins may choose different
+Attesters SHOULD enforce that Issuer directories contain few keys suitable for use
+at any given point in time, and penalize or reject Issuers that advertise too many keys.
+This is because Clients and Origins may choose different
 keys from this directory based on their local state, e.g., their clock, and too many
 keys could be misused for the purposes of partitioning Client anonymity sets.
 
 # Security Considerations
 
-Unlike K-Check, wherein Clients can check key consistency against the first valid
+Unlike K-Check, in which Clients can check key consistency against the first valid
 key in an Issuer private token directory, the Attester consistency check in this document
 needs to allow for greater flexibility, in particular because Client diversity and differences
 may lead to different key selections. Attesters need to balance this flexibility against
