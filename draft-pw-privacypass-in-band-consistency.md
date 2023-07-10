@@ -126,4 +126,4 @@ This document has no IANA actions.
 # Acknowledgments
 {:numbered="false"}
 
-This document was the product of the key consistency design team in the Privacy Pass working group.
+This document was the product of the consistency design team in the Privacy Pass working group.
