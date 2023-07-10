@@ -120,17 +120,17 @@ Table of Contents
    of the Issuer key.
 
    Upon receipt of a token request, which contains a key ID as described
-   in [PRIVACYPASS-ISSUANCE], Attesters do the following:
+   in [PRIVACYPASS-ISSUANCE], an Attester does the following:
 
-   1.  Check that the Attester has a cached copy of the private token
-       directory from the Issuer corresponding to the token request.  If
-       the Attester does not, it first obtains a copy of the directory.
-       If this fails, the Attester aborts the token request with a
-       failure.
+   1.  The Attester checks that it has a cached copy of the private
+       token directory from the Issuer corresponding to the token
+       request.  If the Attester does not, it first obtains a copy of
+       the directory.  If this fails, the Attester aborts the token
+       request with a failure.
 
-   2.  Check that the key ID corresponding to the token request
-       corresponds to the a valid key in the directory.  If this fails,
-       the Attester aborts the token request with a failure.
+   2.  The Attester compares the key ID corresponding in the token
+       request to the the valid keys in the directory.  If no match is
+       found, the Attester aborts token request with a failure.
 
    3.  If the above steps succeed, the Attester allows the token request
        to proceed.
@@ -140,24 +140,25 @@ Table of Contents
    cached copy of the Issuer directory when it becomes invalid
    (according to cache control headers).
 
-   Attesters SHOULD insist that Issuer directories contain few keys
-   suitable for use at any given point in time.  This is because Clients
-   and Origins may choose different keys from this directory based on
-   their local state, e.g., their clock, and too many keys could be
-   misused for the purposes of partitioning Client anonymity sets.
+   Attesters SHOULD enforce that Issuer directories contain few keys
+   suitable for use at any given point in time, and penalize or reject
+   Issuers that advertise too many keys.  This is because Clients and
+   Origins may choose different keys from this directory based on their
+   local state, e.g., their clock, and too many keys could be misused
+   for the purposes of partitioning Client anonymity sets.
 
 4.  Security Considerations
 
-   Unlike K-Check, wherein Clients can check key consistency against the
-   first valid key in an Issuer private token directory, the Attester
-   consistency check in this document needs to allow for greater
-   flexibility, in particular because Client diversity and differences
-   may lead to different key selections.  Attesters need to balance this
-   flexibility against the overall privacy goals of this consistency
-   check.  Admitting an unbounded number of keys in the Issuer's
-   directory effectively renders the consistency check meaningless, as
-   each Client could be given a unique key that belongs to the directory
-   set.
+   Unlike K-Check, in which Clients can check key consistency against
+   the first valid key in an Issuer private token directory, the
+   Attester consistency check in this document needs to allow for
+   greater flexibility, in particular because Client diversity and
+   differences may lead to different key selections.  Attesters need to
+   balance this flexibility against the overall privacy goals of this
+   consistency check.  Admitting an unbounded number of keys in the
+   Issuer's directory effectively renders the consistency check
+   meaningless, as each Client could be given a unique key that belongs
+   to the directory set.
 
 5.  IANA Considerations
 
