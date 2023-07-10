@@ -1,0 +1,227 @@
+
+
+
+
+Privacy Pass                                                    T. Pauly
+Internet-Draft                                                Apple Inc.
+Intended status: Standards Track                              C. A. Wood
+Expires: 11 January 2024                                      Cloudflare
+                                                            10 July 2023
+
+
+              Privacy Pass In-Band Key Consistency Checks
+            draft-pw-privacypass-in-band-consistency-latest
+
+Abstract
+
+   This document describes an in-band key consistency enforcement
+   mechanism for Privacy Pass deployments wherein the Attester is split
+   from the Issuer and Origin.
+
+About This Document
+
+   This note is to be removed before publishing as an RFC.
+
+   Status information for this document may be found at
+   https://datatracker.ietf.org/doc/draft-pw-privacypass-in-band-
+   consistency/.
+
+   Discussion of this document takes place on the Privacy Pass Working
+   Group mailing list (mailto:privacy-pass@ietf.org), which is archived
+   at https://mailarchive.ietf.org/arch/browse/privacy-pass/.  Subscribe
+   at https://www.ietf.org/mailman/listinfo/privacy-pass/.
+
+Status of This Memo
+
+   This Internet-Draft is submitted in full conformance with the
+   provisions of BCP 78 and BCP 79.
+
+   Internet-Drafts are working documents of the Internet Engineering
+   Task Force (IETF).  Note that other groups may also distribute
+   working documents as Internet-Drafts.  The list of current Internet-
+   Drafts is at https://datatracker.ietf.org/drafts/current/.
+
+   Internet-Drafts are draft documents valid for a maximum of six months
+   and may be updated, replaced, or obsoleted by other documents at any
+   time.  It is inappropriate to use Internet-Drafts as reference
+   material or to cite them other than as "work in progress."
+
+   This Internet-Draft will expire on 11 January 2024.
+
+Copyright Notice
+
+   Copyright (c) 2023 IETF Trust and the persons identified as the
+   document authors.  All rights reserved.
+
+   This document is subject to BCP 78 and the IETF Trust's Legal
+   Provisions Relating to IETF Documents (https://trustee.ietf.org/
+   license-info) in effect on the date of publication of this document.
+   Please review these documents carefully, as they describe your rights
+   and restrictions with respect to this document.  Code Components
+   extracted from this document must include Revised BSD License text as
+   described in Section 4.e of the Trust Legal Provisions and are
+   provided without warranty as described in the Revised BSD License.
+
+Table of Contents
+
+   1.  Introduction
+   2.  Conventions and Definitions
+   3.  Attester Consistency Check
+   4.  Security Considerations
+   5.  IANA Considerations
+   6.  References
+     6.1.  Normative References
+     6.2.  Informative References
+   Acknowledgments
+   Authors' Addresses
+
+1.  Introduction
+
+   Key and configuration consistency is an important preqrequisite for
+   guaranteeing security properties of Privacy Pass.  In particular,
+   privacy informally depends on Clients using an Issuer key that many,
+   if not all, other Clients use.  If a Client were to receive an Issuer
+   key that was specific to them, or restricted to a small set of
+   Clients, then use of that Issuer key could be used to learn targeted
+   information about the Client.  Clients that share the same Issuer key
+   are said to have a consisten key.
+
+   [CONSISTENCY] describes general patterns for implementing consistency
+   in protocols such as Privacy Pass, and [K-CHECK] describes a
+   protocol-agnostic mechanism for implementing consistency checks that
+   can apply to Privacy Pass.  K-Check is an orthogonal protocol for
+   checking consistency of a given key that runs out-of-band of Privacy
+   Pass.
+
+   This document specifies an in-band consistency check for Privacy
+   Pass.  It is only applicable to deployments where the Attester is
+   split from the Origin and Issuer.  This is because the Attester is
+   responsible for enforcing consistency on behalf of many Clients.
+
+2.  Conventions and Definitions
+
+   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+   "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
+   "OPTIONAL" in this document are to be interpreted as described in
+   BCP 14 [RFC2119] [RFC8174] when, and only when, they appear in all
+   capitals, as shown here.
+
+3.  Attester Consistency Check
+
+   In Privacy Pass deployment models where the Attester is split from
+   the Origin and Issuer, Clients interact with the Attester to run the
+   issuance protocol for obtaining tokens.  In particular, Clients
+   obtain tokens from the Issuer by sending token requests to the
+   Attester, which forwards token requests to the Issuer.  As an active,
+   on-path participant in the issuance protocol, the Attester is capable
+   of applying enforcement checks for these token requests.  This
+   section describes a simple key consistency enforcement check to
+   ensure that all Clients behind the Attester share a consistent view
+   of the Issuer key.
+
+   Upon receipt of a token request, which contains a key ID as described
+   in [PRIVACYPASS-ISSUANCE], an Attester does the following:
+
+   1.  The Attester checks that it has a cached copy of the private
+       token directory from the Issuer corresponding to the token
+       request.  If the Attester does not, it first obtains a copy of
+       the directory.  If this fails, the Attester aborts the token
+       request with a failure.
+
+   2.  The Attester compares the key ID corresponding in the token
+       request to the the valid keys in the directory.  If no match is
+       found, the Attester aborts token request with a failure.
+
+   3.  If the above steps succeed, the Attester allows the token request
+       to proceed.
+
+   Attesters can update their cached copy of Issuer token directories
+   independently of token requests.  Attesters SHOULD refresh their
+   cached copy of the Issuer directory when it becomes invalid
+   (according to cache control headers).
+
+   Attesters SHOULD enforce that Issuer directories contain few keys
+   suitable for use at any given point in time, and penalize or reject
+   Issuers that advertise too many keys.  This is because Clients and
+   Origins may choose different keys from this directory based on their
+   local state, e.g., their clock, and too many keys could be misused
+   for the purposes of partitioning Client anonymity sets.
+
+4.  Security Considerations
+
+   Unlike K-Check, in which Clients can check key consistency against
+   the first valid key in an Issuer private token directory, the
+   Attester consistency check in this document needs to allow for
+   greater flexibility, in particular because Client diversity and
+   differences may lead to different key selections.  Attesters need to
+   balance this flexibility against the overall privacy goals of this
+   consistency check.  Admitting an unbounded number of keys in the
+   Issuer's directory effectively renders the consistency check
+   meaningless, as each Client could be given a unique key that belongs
+   to the directory set.
+
+5.  IANA Considerations
+
+   This document has no IANA actions.
+
+6.  References
+
+6.1.  Normative References
+
+   [CONSISTENCY]
+              Davidson, A., Finkel, M., Thomson, M., and C. A. Wood,
+              "Key Consistency and Discovery", Work in Progress,
+              Internet-Draft, draft-ietf-privacypass-key-consistency-00,
+              24 October 2022, <https://datatracker.ietf.org/doc/html/
+              draft-ietf-privacypass-key-consistency-00>.
+
+   [OHTTP]    Thomson, M. and C. A. Wood, "Oblivious HTTP", Work in
+              Progress, Internet-Draft, draft-ietf-ohai-ohttp-08, 15
+              March 2023, <https://datatracker.ietf.org/doc/html/draft-
+              ietf-ohai-ohttp-08>.
+
+   [PRIVACYPASS]
+              Davidson, A., Iyengar, J., and C. A. Wood, "The Privacy
+              Pass Architecture", Work in Progress, Internet-Draft,
+              draft-ietf-privacypass-architecture-13, 15 June 2023,
+              <https://datatracker.ietf.org/doc/html/draft-ietf-
+              privacypass-architecture-13>.
+
+   [PRIVACYPASS-ISSUANCE]
+              Celi, S., Davidson, A., Valdez, S., and C. A. Wood,
+              "Privacy Pass Issuance Protocol", Work in Progress,
+              Internet-Draft, draft-ietf-privacypass-protocol-11, 26
+              June 2023, <https://datatracker.ietf.org/doc/html/draft-
+              ietf-privacypass-protocol-11>.
+
+   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
+              Requirement Levels", BCP 14, RFC 2119,
+              DOI 10.17487/RFC2119, March 1997,
+              <https://www.rfc-editor.org/rfc/rfc2119>.
+
+   [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
+              2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
+              May 2017, <https://www.rfc-editor.org/rfc/rfc8174>.
+
+6.2.  Informative References
+
+   [K-CHECK]  "*** BROKEN REFERENCE ***".
+
+Acknowledgments
+
+   This document was the product of the consistency design team in the
+   Privacy Pass working group.
+
+Authors' Addresses
+
+   Tommy Pauly
+   Apple Inc.
+   One Apple Park Way
+   Cupertino, California 95014,
+   United States of America
+   Email: tpauly@apple.com
+
+
+   Christopher A. Wood
+   Cloudflare
+   Email: caw@heapingbits.net
