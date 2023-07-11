@@ -1,0 +1,97 @@
+{
+  "magic": "E!vIA5L86J2I",
+  "timestamp": "2023-07-11T00:15:25.755079+00:00",
+  "repo": "chris-wood/draft-pw-privacypass-in-band-consistency",
+  "labels": [
+    {
+      "name": "bug",
+      "description": "Something isn't working",
+      "color": "d73a4a"
+    },
+    {
+      "name": "documentation",
+      "description": "Improvements or additions to documentation",
+      "color": "0075ca"
+    },
+    {
+      "name": "duplicate",
+      "description": "This issue or pull request already exists",
+      "color": "cfd3d7"
+    },
+    {
+      "name": "enhancement",
+      "description": "New feature or request",
+      "color": "a2eeef"
+    },
+    {
+      "name": "good first issue",
+      "description": "Good for newcomers",
+      "color": "7057ff"
+    },
+    {
+      "name": "help wanted",
+      "description": "Extra attention is needed",
+      "color": "008672"
+    },
+    {
+      "name": "invalid",
+      "description": "This doesn't seem right",
+      "color": "e4e669"
+    },
+    {
+      "name": "question",
+      "description": "Further information is requested",
+      "color": "d876e3"
+    },
+    {
+      "name": "wontfix",
+      "description": "This will not be worked on",
+      "color": "ffffff"
+    }
+  ],
+  "issues": [],
+  "pulls": [
+    {
+      "number": 1,
+      "id": "PR_kwDOJ562tc5VG64o",
+      "title": "Editorial",
+      "url": "https://github.com/chris-wood/draft-pw-privacypass-in-band-consistency/pull/1",
+      "state": "MERGED",
+      "author": "tfpauly",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2023-07-10T17:01:05Z",
+      "updatedAt": "2023-07-10T17:04:26Z",
+      "baseRepository": "chris-wood/draft-pw-privacypass-in-band-consistency",
+      "baseRefName": "main",
+      "baseRefOid": "fdc09c8ca82a162a4025b77fa3047ae9e166a8b9",
+      "headRepository": "chris-wood/draft-pw-privacypass-in-band-consistency",
+      "headRefName": "tfpauly-patch-1",
+      "headRefOid": "0aa35a998148887116c0858f4c01e3bbedbae833",
+      "closedAt": "2023-07-10T17:04:26Z",
+      "mergedAt": "2023-07-10T17:04:26Z",
+      "mergedBy": "chris-wood",
+      "mergeCommit": {
+        "oid": "4674b825384bba467f8e493f6bc56a2942b727b5"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOJ562tc5awI9r",
+          "commit": {
+            "abbreviatedOid": "0aa35a9"
+          },
+          "author": "chris-wood",
+          "authorAssociation": "OWNER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2023-07-10T17:04:01Z",
+          "updatedAt": "2023-07-10T17:04:01Z",
+          "comments": []
+        }
+      ]
+    }
+  ]
+}
